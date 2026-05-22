@@ -9,15 +9,20 @@ export function scheduleCacheKey(date: string): string {
 }
 
 /**
- * Fetch the MLB schedule for a given date (YYYY-MM-DD). Cached for 60s
- * with a 120s stale window.
+ * Fetch the MLB schedule for a given date (YYYY-MM-DD).
+ *
+ * Cached fresh for 30 min, with a 5-min stale window. This matches the
+ * cron-job.org warmer cadence (every 30 min): the warmer always refreshes
+ * the entry before it expires, so served reads are virtually always
+ * fresh-cache hits. On the rare miss (cold start, warmer outage) the next
+ * request fetches synchronously.
  */
 export async function getSchedule(date: string): Promise<ScheduleResponse> {
   return swr(
     scheduleCacheKey(date),
     () =>
       getJson(`/schedule?sportId=1&date=${encodeURIComponent(date)}`, ScheduleResponse),
-    { freshSeconds: 60, staleSeconds: 120 },
+    { freshSeconds: 30 * 60, staleSeconds: 5 * 60 },
   );
 }
 

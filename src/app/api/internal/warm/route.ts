@@ -1,6 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getSchedule } from "@/lib/mlb/schedule";
-import { getLinescore } from "@/lib/mlb/linescore";
 import { todayET } from "@/lib/http";
 
 export const runtime = "nodejs";
@@ -9,14 +8,19 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 /**
- * Warmer endpoint pinged by an external scheduler (cron-job.org) once per
- * minute — Vercel Hobby caps native crons at once/day, so the scheduler lives
- * off-platform. The endpoint is scheduler-agnostic: any HTTP cron service
- * (QStash, GitHub Actions, Vercel Cron on Pro) can call it.
+ * Warmer endpoint pinged by an external scheduler (cron-job.org) every
+ * 30 minutes — Vercel Hobby caps native crons at once/day, so the
+ * scheduler lives off-platform. The endpoint is scheduler-agnostic.
  *
- * Refreshes today's ET schedule, then refreshes every live game's linescore.
- * Idle games are not refreshed here — they piggyback on the 5-minute schedule
- * cache via `getSchedule`.
+ * Today this only refreshes today's ET schedule into Redis. Linescores are
+ * not pre-warmed here: at a 30-min cadence the linescore cache (15s TTL)
+ * would always be empty before the next warmer pass, so any pre-fetch is
+ * wasted work. Linescores stay on-demand for now — first viewer per 15s
+ * window pays the upstream call, rest read from cache.
+ *
+ * Phase 3 (SSE) needs ~10–15s linescore freshness for live updates. That
+ * will be a separate fast-cadence cron path (or Vercel Pro cron) doing
+ * change detection + Redis pub/sub — see docs/PLAN.md.
  *
  * Auth: requires `Authorization: Bearer ${CRON_SECRET}` header.
  */
@@ -32,23 +36,18 @@ export async function GET(req: NextRequest) {
   const date = todayET();
   const sched = await getSchedule(date);
 
-  const liveGamePks: number[] = [];
+  // Reported for observability only; no fan-out happens here today.
+  let liveGames = 0;
   for (const d of sched.dates) {
     for (const g of d.games) {
-      if (g.status.abstractGameState === "Live") liveGamePks.push(g.gamePk);
+      if (g.status.abstractGameState === "Live") liveGames++;
     }
   }
 
-  // Refresh linescores in parallel, but tolerate individual failures.
-  const results = await Promise.allSettled(
-    liveGamePks.map((pk) => getLinescore(pk)),
-  );
-  const failed = results.filter((r) => r.status === "rejected").length;
-
   return NextResponse.json({
     date,
-    liveGames: liveGamePks.length,
-    refreshed: liveGamePks.length - failed,
-    failed,
+    totalGames: sched.totalGames ?? sched.dates.reduce((n, d) => n + d.games.length, 0),
+    liveGames,
+    scheduleRefreshed: true,
   });
 }
