@@ -16,13 +16,19 @@ Full context for this plan lives in [`CLAUDE_SUMMARY.md`](../CLAUDE_SUMMARY.md) 
   - `GET /api/game/[gamePk]/linescore` — cache 5s in KV
   - `GET /api/game/[gamePk]` — composite (schedule + linescore + boxscore)
 - Stale-while-revalidate against KV with versioned keys (`mlb:linescore:{gamePk}:v1`)
-- Vercel Cron at `*/1 * * * *` hitting `/api/internal/warm`
+- External scheduler ([cron-job.org](https://cron-job.org)) pings `/api/internal/warm` every minute
+  - Vercel Hobby plan caps crons at once/day, so the scheduler lives outside Vercel
   - Live games refreshed every minute, idle games every 5 min
-  - Protected via `CRON_SECRET`
+  - Protected via `CRON_SECRET` (set in Vercel env vars **and** as an `Authorization: Bearer …` header in cron-job.org)
+  - Swappable for Vercel Cron, QStash, or GitHub Actions later — endpoint contract is unchanged
 - Zod validation at the upstream boundary so schema drift fails loud
 - Rate limiting on `/api/*` (Upstash Ratelimit, ~60 req/min/IP)
-- Patch the existing Vite SPA at `/Users/michael/Desktop/mlb-scorebug` to point at the new `/api/*` proxy so upstream traffic drops the moment Phase 1 deploys
 - **Estimate:** 2–3 days
+
+## Backlog (deferred items)
+
+- **Revisit scheduler**: currently cron-job.org → `/api/internal/warm`. Reconsider when traffic justifies Vercel Pro ($20/mo, native Vercel Cron) or when reliability requires a redundant scheduler (e.g. GitHub Actions as backup).
+- Patching the legacy Vite SPA at `/Users/michael/Desktop/mlb-scorebug` was deferred — not customer-facing.
 
 ## Phase 2 — Migrate UI to Next.js
 - Routes: `/`, `/game/[gamePk]`, `/date/[date]`, `/team/[abbr]`
@@ -93,7 +99,7 @@ The differentiator vs every other free scoreboard, and the basis for a paid tier
 - **Estimate:** ~1 week then ongoing
 
 ## Phase 7 — Polish for interviews
-- Architecture diagram (Excalidraw → PNG) — browser → Vercel edge → route handlers → KV → MLB, with CF Workers SSE called out
+- Architecture diagram (Excalidraw → PNG) — browser → Vercel edge → route handlers → KV → MLB, with cron-job.org → warmer and CF Workers SSE called out
 - "Decisions and trade-offs" section in README — *the* highest-signal artifact for recruiters
 - "What I'd do next" section in README — shows self-awareness
 - Strict TS, no `any`, service layer cleanly separated from routes

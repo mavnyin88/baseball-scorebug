@@ -16,7 +16,8 @@ This is a rewrite of [mlb-scorebug](../mlb-scorebug) (Vite SPA) into a full-stac
 - TanStack Query (client-side live streams + fallbacks)
 - Zod (boundary validation for MLB responses)
 - Vercel KV / Upstash Redis (cache + pub-sub) — wired in Phase 1
-- Vercel hosting + Cron, with the SSE endpoint likely on Cloudflare Workers (Phase 3)
+- Vercel hosting; the warmer is pinged on a 1-min schedule by [cron-job.org](https://cron-job.org) (external because Vercel Hobby caps crons at 1/day)
+- SSE endpoint will likely live on Cloudflare Workers (Phase 3)
 
 ## Status
 
@@ -31,6 +32,17 @@ pnpm dev
 ```
 
 Then open http://localhost:3000.
+
+## Scheduled warmer
+
+`/api/internal/warm` refreshes today's schedule and every live game's linescore. It must be pinged once a minute in production. Setup:
+
+1. Set `CRON_SECRET` (any random string, e.g. `openssl rand -hex 32`) in Vercel → Project → Settings → Environment Variables.
+2. In [cron-job.org](https://cron-job.org), create a job:
+   - **URL:** `https://<your-domain>/api/internal/warm`
+   - **Schedule:** every 1 minute
+   - **Headers:** `Authorization: Bearer <same CRON_SECRET>`
+3. Confirm execution log shows `200` and the response body reports `liveGames` / `refreshed`.
 
 ## Layout
 

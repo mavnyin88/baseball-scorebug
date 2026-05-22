@@ -71,7 +71,7 @@ Done in this session. See "Current state" below.
   - `GET /api/game/[gamePk]/linescore` — cache 5s in KV
   - `GET /api/game/[gamePk]` — composite (schedule + linescore + boxscore)
 - Stale-while-revalidate cache pattern; versioned keys like `mlb:linescore:{gamePk}:v1`
-- Vercel Cron at `*/1 * * * *` hitting `/api/internal/warm` (live games every minute, idle games every 5 min)
+- External scheduler (cron-job.org) pings `/api/internal/warm` every minute — Vercel Hobby caps native crons at once/day, so the scheduler lives off-platform. Auth via `CRON_SECRET` bearer header. Swappable for Vercel Cron / QStash / GitHub Actions later.
 - Zod validation at the upstream boundary
 - Rate limiting on `/api/*` (Upstash Ratelimit, ~60 req/min/IP)
 - **Also: patch the existing Vite SPA** to point at the new `/api/*` proxy so upstream traffic drops the moment Phase 1 deploys. (User was asked about this at end of last turn — answer pending.)

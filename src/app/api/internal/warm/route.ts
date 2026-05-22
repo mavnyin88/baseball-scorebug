@@ -5,14 +5,18 @@ import { todayET } from "@/lib/http";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-// Vercel cron caps at 60s; warm cycles should comfortably fit.
+// Vercel function timeout cap on Hobby is 60s; warm cycles fit comfortably.
 export const maxDuration = 60;
 
 /**
- * Warmer endpoint hit by Vercel Cron once per minute. Refreshes the schedule
- * for today's ET date, then refreshes linescores for every game that is
- * currently live. Idle games are not refreshed here — they piggyback on the
- * 5-minute schedule cache via `getSchedule`.
+ * Warmer endpoint pinged by an external scheduler (cron-job.org) once per
+ * minute — Vercel Hobby caps native crons at once/day, so the scheduler lives
+ * off-platform. The endpoint is scheduler-agnostic: any HTTP cron service
+ * (QStash, GitHub Actions, Vercel Cron on Pro) can call it.
+ *
+ * Refreshes today's ET schedule, then refreshes every live game's linescore.
+ * Idle games are not refreshed here — they piggyback on the 5-minute schedule
+ * cache via `getSchedule`.
  *
  * Auth: requires `Authorization: Bearer ${CRON_SECRET}` header.
  */
