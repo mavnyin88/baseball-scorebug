@@ -16,9 +16,9 @@ Full context for this plan lives in [`CLAUDE_SUMMARY.md`](../CLAUDE_SUMMARY.md) 
   - `GET /api/game/[gamePk]/linescore` — cache 5s in KV
   - `GET /api/game/[gamePk]` — composite (schedule + linescore + boxscore)
 - Stale-while-revalidate against KV with versioned keys (`mlb:linescore:{gamePk}:v1`)
-- External scheduler ([cron-job.org](https://cron-job.org)) pings `/api/internal/warm` every minute
+- External scheduler ([cron-job.org](https://cron-job.org)) pings `/api/internal/warm` every 30 minutes
   - Vercel Hobby plan caps crons at once/day, so the scheduler lives outside Vercel
-  - Live games refreshed every minute, idle games every 5 min
+  - Currently refreshes today's schedule only — linescores stay on-demand (warmer cadence is too slow to keep the 15s linescore cache warm; pre-fetching would be wasted work)
   - Protected via `CRON_SECRET` (set in Vercel env vars **and** as an `Authorization: Bearer …` header in cron-job.org)
   - Swappable for Vercel Cron, QStash, or GitHub Actions later — endpoint contract is unchanged
 - Zod validation at the upstream boundary so schema drift fails loud
@@ -42,8 +42,13 @@ Full context for this plan lives in [`CLAUDE_SUMMARY.md`](../CLAUDE_SUMMARY.md) 
 - **Estimate:** 3–4 days
 
 ## Phase 3 — Realtime via SSE
+- **Cadence problem to solve here:** scorebug page needs to feel live, target ~10–15s update latency. The Phase 1 warmer (cron-job.org, 30-min cadence, schedule-only) is too slow for this. Options to evaluate:
+  1. Add a **second, fast-cadence cron** (e.g. cron-job.org or QStash hitting `/api/internal/warm-live` every 10–15s during MLB game hours only, paused overnight)
+  2. Upgrade to **Vercel Pro** and use native Vercel Cron at 1-min minimum (paired with browser-side polling for the in-between seconds)
+  3. Have the **SSE handler itself** poll MLB on a timer per connected game — works on Cloudflare Workers where connections are long-lived
+- Decide before writing pub/sub plumbing; the cadence choice constrains everything else.
 - `/api/game/[gamePk]/stream` endpoint — likely deployed on **Cloudflare Workers** (long-lived connections, no Vercel function duration cap)
-- Warmer compares fresh linescore against cached version; on change, publishes diff to Redis pub/sub channel `game:{gamePk}` and updates KV
+- Fast warmer compares fresh linescore against cached version; on change, publishes diff to Redis pub/sub channel `game:{gamePk}` and updates KV
 - `useGameStream(gamePk, initialData)` client hook:
   - Wraps `EventSource`
   - Merges diffs into local state
