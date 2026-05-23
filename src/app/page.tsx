@@ -33,18 +33,24 @@ export default async function Home() {
   );
 }
 
+function getStatusLabel(game: ScheduleGame): string {
+  if (game.status.detailedState === "Postponed") {
+    return "Postponed";
+  }
+  const status = game.status.abstractGameState;
+  if (status === "Live") {
+    return "LIVE";
+  }
+  if (status === "Final") {
+    return "Final";
+  }
+  return formatGameTime(game.gameDate);
+}
+
 function GameCard({ game }: { game: ScheduleGame }) {
   const away = game.teams.away;
   const home = game.teams.home;
-  const status = game.status.abstractGameState;
-  const isFinal = status === "Final";
-  const isLive = status === "Live";
-
-  const statusLabel = isLive
-    ? "LIVE"
-    : isFinal
-      ? "Final"
-      : formatGameTime(game.gameDate);
+  const statusLabel = getStatusLabel(game);
 
   return (
     <Link
@@ -57,7 +63,7 @@ function GameCard({ game }: { game: ScheduleGame }) {
       </div>
       <div
         className={`mt-3 pt-3 border-t border-white/10 text-center text-xs font-semibold tracking-wide ${
-          isLive ? "text-red-400" : isFinal ? "text-zinc-300" : "text-amber-300"
+          statusLabel === "LIVE" ? "text-red-400" : statusLabel === "Final" ? "text-zinc-300" : "text-amber-300"
         }`}
       >
         {statusLabel}
