@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="161px" height="49px" viewBox="0 0 161 49" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>BASEBALL-SCOREBUG-WHITE-TEXT-LOGO</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" font-family="Impact" font-style="condensed" font-weight="700">
+        <g id="Artboard" transform="translate(-1194.000000, -667.000000)" fill-rule="nonzero">
+            <g id="BASEBALL-SCOREBUG-WHITE-TEXT-LOGO" transform="translate(1194.000000, 667.000000)">
+                <text id="BASEBALL" font-size="11" line-spacing="10" fill="#FFFFFF" fill-opacity="0.704756303">
+                    <tspan x="2" y="11.1111111">BASEBALL</tspan>
+                </text>
+                <text id="SCORE" fill="#FFFFFF" font-size="38" line-spacing="40">
+                    <tspan x="0" y="46.6">SCORE</tspan>
+                </text>
+                <text id="BUG" fill="#C91422" font-size="38" line-spacing="40">
+                    <tspan x="98" y="46.6">BUG</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>
