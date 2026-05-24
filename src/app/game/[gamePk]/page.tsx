@@ -55,7 +55,7 @@ export default async function GamePage({ params }: Params) {
     <div className="mx-auto max-w-5xl px-5 py-8">
       <Link
         href="/"
-        className="inline-block mb-6 text-sm text-blue-300 hover:text-blue-200 transition-colors"
+        className="inline-block mb-6 text-sm hover:text-blue-200 transition-colors"
       >
         ← All games
       </Link>
