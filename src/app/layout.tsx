@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
+import Image from "next/image";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -39,7 +40,13 @@ export default function RootLayout({
               href="/"
               className="text-lg font-semibold tracking-tight text-white hover:text-blue-300 transition-colors"
             >
-              Baseball Scorebug
+              <Image
+                src="/Baseball-Scorebug-Logo.svg"
+                alt="MLB Scorebug logo"
+                width={170}
+                height={50}
+                className="inline-block mr-2 -mt-1"
+              />
             </Link>
           </div>
         </header>
