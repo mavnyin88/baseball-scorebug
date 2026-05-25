@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "MLB Scorebug — live scores",
+    default: "Baseball Scorebug — Live MLB scores, scorebug and stats",
     template: "%s · MLB Scorebug",
   },
   description:
@@ -33,7 +33,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-black text-zinc-100">
+      <body className="min-h-full flex flex-col bg-background text-zinc-100">
         <header className="border-b border-white/10">
           <div className="mx-auto max-w-5xl px-5 py-4">
             <Link
