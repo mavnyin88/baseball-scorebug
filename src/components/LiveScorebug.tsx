@@ -95,7 +95,7 @@ export function LiveScorebug({
         )}
       </header>
 
-      <div className="grid grid-cols-[2fr_1fr_1fr] gap-4 rounded-lg bg-black/80 p-5 border border-white/10 max-w-[23rem]">
+      <div className="grid grid-cols-[2fr_1fr_1fr] gap-4 rounded-lg bg-surface p-5 border border-white/10 max-w-[23rem]">
         {/* Scores */}
         <div className="flex flex-col justify-center gap-3">
           <ScoreRow abbr={awayAbbr} runs={away?.runs} />
