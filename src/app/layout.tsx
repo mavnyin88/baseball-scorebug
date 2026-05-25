@@ -43,7 +43,6 @@ export default function RootLayout({
               <Image
                 src="/Baseball-Scorebug-Logo.svg"
                 alt="MLB Scorebug logo"
-                width={170}
                 height={50}
                 className="inline-block mr-2 -mt-1"
               />
