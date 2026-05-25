@@ -41,7 +41,7 @@ export default function RootLayout({
               className="text-lg font-semibold tracking-tight text-white hover:text-blue-300 transition-colors"
             >
               <Image
-                src="/Baseball-Scorebug-Logo.svg"
+                src="/baseball-scorebug-nav-logo.png"
                 alt="MLB Scorebug logo"
                 loading="eager"
                 width={256}
