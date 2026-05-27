@@ -5,7 +5,7 @@ import { teamAbbr } from "@/lib/mlb/teams";
 import type { ScheduleGame } from "@/lib/mlb/types";
 
 // RSC. Refetched at most every 30s by Next's data cache; the underlying
-// MLB call is debounced by our own KV cache (30-min fresh window).
+// MLB call is debounced by our own KV cache (1-min fresh window).
 export const revalidate = 30;
 
 export default async function Home() {

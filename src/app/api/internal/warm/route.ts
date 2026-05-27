@@ -9,7 +9,7 @@ export const maxDuration = 60;
 
 /**
  * Warmer endpoint pinged by an external scheduler (cron-job.org) every
- * 30 minutes — Vercel Hobby caps native crons at once/day, so the
+ * 1 minute — Vercel Hobby caps native crons at once/day, so the
  * scheduler lives off-platform. The endpoint is scheduler-agnostic.
  *
  * Today this only refreshes today's ET schedule into Redis. Linescores are
