@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="46px" height="62px" viewBox="0 0 46 62" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Artboard</title>
+    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Scorebug-Logo" transform="translate(2.000000, -1.000000)">
+            <circle id="Oval" stroke="#FFFFFF" stroke-width="2" fill="#FFFFFF" fill-rule="nonzero" cx="21" cy="40" r="21"></circle>
+            <path d="M11,24 C15,32 15,48 11,56" id="Path" stroke="#C91422" stroke-width="2" stroke-linecap="round"></path>
+            <path d="M31,24 C27,32 27,48 31,56" id="Path" stroke="#C91422" stroke-width="2" stroke-linecap="round"></path>
+            <line x1="10" y1="28" x2="14" y2="27" id="Path" stroke="#C91422" stroke-width="1.5" fill="#000000" fill-rule="nonzero" stroke-linecap="round"></line>
+            <line x1="11" y1="32.75" x2="15" y2="32.25" id="Path" stroke="#C91422" stroke-width="1.5" fill="#000000" fill-rule="nonzero" stroke-linecap="round"></line>
+            <line x1="12" y1="37.5" x2="16" y2="37.5" id="Path" stroke="#C91422" stroke-width="1.5" fill="#000000" fill-rule="nonzero" stroke-linecap="round"></line>
+            <line x1="12" y1="42.25" x2="16" y2="42.75" id="Path" stroke="#C91422" stroke-width="1.5" fill="#000000" fill-rule="nonzero" stroke-linecap="round"></line>
+            <line x1="12" y1="47" x2="16" y2="48" id="Path" stroke="#C91422" stroke-width="1.5" fill="#000000" fill-rule="nonzero" stroke-linecap="round"></line>
+            <line x1="11" y1="52" x2="15" y2="53" id="Path" stroke="#C91422" stroke-width="1.5" fill="#000000" fill-rule="nonzero" stroke-linecap="round"></line>
+            <line x1="32" y1="28" x2="28" y2="27" id="Path" stroke="#C91422" stroke-width="1.5" fill="#000000" fill-rule="nonzero" stroke-linecap="round"></line>
+            <line x1="31" y1="32.75" x2="27" y2="32.25" id="Path" stroke="#C91422" stroke-width="1.5" fill="#000000" fill-rule="nonzero" stroke-linecap="round"></line>
+            <line x1="30" y1="37.5" x2="26" y2="37.5" id="Path" stroke="#C91422" stroke-width="1.5" fill="#000000" fill-rule="nonzero" stroke-linecap="round"></line>
+            <line x1="30" y1="42.25" x2="26" y2="42.75" id="Path" stroke="#C91422" stroke-width="1.5" fill="#000000" fill-rule="nonzero" stroke-linecap="round"></line>
+            <line x1="30" y1="47" x2="26" y2="48" id="Path" stroke="#C91422" stroke-width="1.5" fill="#000000" fill-rule="nonzero" stroke-linecap="round"></line>
+            <line x1="31" y1="52" x2="27" y2="53" id="Path" stroke="#C91422" stroke-width="1.5" fill="#000000" fill-rule="nonzero" stroke-linecap="round"></line>
+            <g id="Left-Antena" transform="translate(12.500000, 10.500000) rotate(-13.000000) translate(-12.500000, -10.500000) translate(9.000000, 1.000000)">
+                <line x1="2.60317812" y1="3.86927182" x2="6.32877531" y2="18.8908871" id="Line" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square"></line>
+                <ellipse id="Oval" fill="#C91422" cx="2.45" cy="2.46296296" rx="2.45" ry="2.46296296"></ellipse>
+            </g>
+            <g id="Left-Antena" transform="translate(29.500000, 10.500000) scale(-1, 1) rotate(-13.000000) translate(-29.500000, -10.500000) translate(26.000000, 1.000000)">
+                <line x1="2.60317812" y1="3.86927182" x2="6.32877531" y2="18.8908871" id="Line" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square"></line>
+                <ellipse id="Oval" fill="#C91422" cx="2.45" cy="2.46296296" rx="2.45" ry="2.46296296"></ellipse>
+            </g>
+        </g>
+    </g>
+</svg>
