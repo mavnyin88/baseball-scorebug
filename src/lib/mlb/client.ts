@@ -40,6 +40,7 @@ async function fetchJson(path: string, opts: FetchOptions = {}): Promise<unknown
       const res = await fetch(url, {
         signal: controller.signal,
         headers: { accept: "application/json" },
+        cache: "no-store",
       });
       if (!res.ok) {
         // Retry 5xx; surface 4xx immediately.
