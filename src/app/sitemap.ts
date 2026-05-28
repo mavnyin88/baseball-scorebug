@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getSchedule } from "@/lib/mlb/schedule";
 import { todayET } from "@/lib/http";
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://baseball-scorebug.vercel.app";
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.baseballscorebug.com";
 
 /**
  * Sitemap of today's games + the home page. Search engines re-crawl regularly,
