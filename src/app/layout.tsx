@@ -15,12 +15,33 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.baseballscorebug.com"
+  ),
   title: {
     default: "Baseball Scorebug — Live MLB scores, scorebug and stats",
     template: "%s · MLB Scorebug",
   },
   description:
     "Live MLB scoreboard and per-game scorebug. Real-time inning, count, and bases.",
+  keywords: ["MLB", "baseball", "scorebug", "live scores", "scoreboard", "innings"],
+  robots: { index: true, follow: true },
+  openGraph: {
+    title: "Baseball Scorebug — Live MLB scores, scorebug and stats",
+    description:
+      "Live MLB scoreboard and per-game scorebug. Real-time inning, count, and bases.",
+    url: "/",
+    siteName: "Baseball Scorebug",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Baseball Scorebug" }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Baseball Scorebug — Live MLB scores, scorebug and stats",
+    description:
+      "Live MLB scoreboard and per-game scorebug. Real-time inning, count, and bases.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({
