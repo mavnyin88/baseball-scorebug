@@ -31,9 +31,24 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       ? ` (${teamAbbr(away.team.name)} ${away.score} – ${home.score} ${teamAbbr(home.team.name)})`
       : "";
   const state = game.status.detailedState;
+  const title = `${away.team.name} @ ${home.team.name}${score} — ${state}`;
+  const description = `Live scorebug for ${away.team.name} vs ${home.team.name}.`;
   return {
-    title: `${away.team.name} @ ${home.team.name}${score} — ${state}`,
-    description: `Live scorebug for ${away.team.name} vs ${home.team.name}.`,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `/game/${gamePk}`,
+      images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Baseball Scorebug" }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/og-image.png"],
+    },
   };
 }
 
