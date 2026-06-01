@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import type { LinescoreResponse } from "@/lib/mlb/types";
 
 interface Props {
@@ -109,11 +109,7 @@ export function LiveScorebug({
             second={!!data.offense?.second?.id}
             third={!!data.offense?.third?.id}
           />
-          <p className="text-md">
-            <span>{data.balls ?? 0}</span>
-            <span className="mx-1 text-zinc-500">-</span>
-            <span>{data.strikes ?? 0}</span>
-          </p>
+          <Count balls={data.balls ?? 0} strikes={data.strikes ?? 0} />
         </div>
 
         {/* Inning + outs */}
@@ -122,16 +118,7 @@ export function LiveScorebug({
             <InningArrow state={inningState} />
             <p className="text-md">{data.currentInningOrdinal ?? "—"}</p>
           </div>
-          <div className="flex gap-1.5">
-            {[0, 1].map((i) => (
-              <span
-                key={i}
-                className={`size-4 rounded-full border-2 border-white ${
-                  (data.outs ?? 0) > i ? "bg-white" : "bg-transparent"
-                }`}
-              />
-            ))}
-          </div>
+          <Outs outs={data.outs ?? 0} />
         </div>
       </div>
 
@@ -139,16 +126,47 @@ export function LiveScorebug({
   );
 }
 
-function ScoreRow({ abbr, runs }: { abbr: string; runs: number | undefined }) {
+const ScoreRow = memo(function ScoreRow({
+  abbr,
+  runs,
+}: {
+  abbr: string;
+  runs: number | undefined;
+}) {
   return (
     <div className="flex items-center justify-between text-2xl mr-9">
       <span className="text-base text-zinc-300 min-w-[3rem]">{abbr}</span>
       <span className="font-bold tabular-nums">{runs ?? 0}</span>
     </div>
   );
-}
+});
 
-function BasesDiamond({
+const Count = memo(function Count({ balls, strikes }: { balls: number; strikes: number }) {
+  return (
+    <p className="text-md">
+      <span>{balls}</span>
+      <span className="mx-1 text-zinc-500">-</span>
+      <span>{strikes}</span>
+    </p>
+  );
+});
+
+const Outs = memo(function Outs({ outs }: { outs: number }) {
+  return (
+    <div className="flex gap-1.5">
+      {[0, 1].map((i) => (
+        <span
+          key={i}
+          className={`size-4 rounded-full border-2 border-white ${
+            outs > i ? "bg-white" : "bg-transparent"
+          }`}
+        />
+      ))}
+    </div>
+  );
+});
+
+const BasesDiamond = memo(function BasesDiamond({
   first,
   second,
   third,
@@ -190,9 +208,9 @@ function BasesDiamond({
       />
     </svg>
   );
-}
+});
 
-function InningArrow({ state }: { state: string }) {
+const InningArrow = memo(function InningArrow({ state }: { state: string }) {
   if (state === "Top") {
     return (
       <svg width="12" height="10" viewBox="0 0 200 150" aria-label="Top inning">
@@ -208,4 +226,4 @@ function InningArrow({ state }: { state: string }) {
     );
   }
   return <span className="text-[11px] text-zinc-400">Mid</span>;
-}
+});
