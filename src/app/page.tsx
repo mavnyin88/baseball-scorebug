@@ -51,6 +51,7 @@ function GameCard({ game }: { game: ScheduleGame }) {
   const away = game.teams.away;
   const home = game.teams.home;
   const statusLabel = getStatusLabel(game);
+  const isGameActive = game.status.abstractGameState === "Live" || game.status.abstractGameState === "Final";
 
   return (
     <Link
@@ -58,8 +59,8 @@ function GameCard({ game }: { game: ScheduleGame }) {
       className="block rounded-lg bg-surface p-5 text-white shadow-md hover:-translate-y-1 hover:shadow-xl transition-all"
     >
       <div className="flex flex-col gap-2">
-        <TeamRow side={away} />
-        <TeamRow side={home} />
+        <TeamRow side={away} showScore={isGameActive} />
+        <TeamRow side={home} showScore={isGameActive} />
       </div>
       <div
         className={`mt-3 pt-3 border-t border-white/10 text-center text-xs font-semibold tracking-wide ${
@@ -72,7 +73,7 @@ function GameCard({ game }: { game: ScheduleGame }) {
   );
 }
 
-function TeamRow({ side }: { side: ScheduleGame["teams"]["away"] }) {
+function TeamRow({ side, showScore = false }: { side: ScheduleGame["teams"]["away"]; showScore?: boolean }) {
   const rec = side.leagueRecord;
   return (
     <div className="flex items-center justify-between text-sm">
@@ -88,7 +89,7 @@ function TeamRow({ side }: { side: ScheduleGame["teams"]["away"] }) {
             {rec.wins}-{rec.losses}
           </span>
         )}
-        {side.score !== undefined && (
+        {showScore && side.score !== undefined && (
           <span className="font-mono font-bold w-6 text-right">{side.score}</span>
         )}
       </div>
