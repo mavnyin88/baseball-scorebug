@@ -28,7 +28,7 @@ function GameCard({ game }: { game: ScheduleGame }) {
   return (
     <Link
       href={`/game/${game.gamePk}`}
-      className="block rounded-lg p-5 text-white hover:-translate-y-1 hover:shadow-xl transition-all"
+      className="block rounded-lg p-5 text-white hover:ring-1 hover:ring-white/25 hover:shadow-xl hover:shadow-black/40 transition-all duration-200"
     >
       <div className="flex flex-col gap-2">
         <TeamRow side={away} />
