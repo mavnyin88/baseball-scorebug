@@ -11,7 +11,6 @@ const ABBR: Record<string, string> = {
   "Los Angeles Angels": "LAA",
   "Minnesota Twins": "MIN",
   "New York Yankees": "NYY",
-  "Oakland Athletics": "OAK",
   "Athletics": "ATH",
   "Seattle Mariners": "SEA",
   "Tampa Bay Rays": "TB",
@@ -37,3 +36,7 @@ const ABBR: Record<string, string> = {
 export function teamAbbr(name: string): string {
   return ABBR[name] ?? name.slice(0, 3).toUpperCase();
 }
+
+export const ALL_TEAMS: { name: string; abbr: string }[] = Object.entries(ABBR)
+  .map(([name, abbr]) => ({ name, abbr }))
+  .sort((a, b) => a.abbr.localeCompare(b.abbr));
