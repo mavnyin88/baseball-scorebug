@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { teamAbbr, ALL_TEAMS } from "@/lib/mlb/teams";
 
 const STORAGE_KEY = "mlb-favorite-team";
@@ -8,6 +8,23 @@ const RED = "#C91422";
 
 function dispatch() {
   window.dispatchEvent(new Event("favorite-changed"));
+}
+
+function subscribe(callback: () => void) {
+  window.addEventListener("favorite-changed", callback);
+  window.addEventListener("storage", callback);
+  return () => {
+    window.removeEventListener("favorite-changed", callback);
+    window.removeEventListener("storage", callback);
+  };
+}
+
+function getSnapshot() {
+  return localStorage.getItem(STORAGE_KEY);
+}
+
+function getServerSnapshot() {
+  return null;
 }
 
 const StarIcon = ({ size = 10, color = RED }: { size?: number; color?: string }) => (
@@ -44,30 +61,20 @@ function TeamChip({ name, abbr, onPick }: { name: string; abbr: string; onPick: 
 }
 
 export function FavoriteBar() {
-  const [favorite, setFavorite] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    const check = () => setFavorite(localStorage.getItem(STORAGE_KEY));
-    check();
-    setMounted(true);
-    window.addEventListener("favorite-changed", check);
-    window.addEventListener("storage", check);
-    return () => {
-      window.removeEventListener("favorite-changed", check);
-      window.removeEventListener("storage", check);
-    };
-  }, []);
+  const favorite = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const mounted = useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false,
+  );
 
   function pick(teamName: string) {
     localStorage.setItem(STORAGE_KEY, teamName);
-    setFavorite(teamName);
     dispatch();
   }
 
   function clear() {
     localStorage.removeItem(STORAGE_KEY);
-    setFavorite(null);
     dispatch();
   }
 
