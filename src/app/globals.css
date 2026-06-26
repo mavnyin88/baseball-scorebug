@@ -19,3 +19,55 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
+
+/* Mobile-only: thinner scrollbars and bigger touch targets for team chips */
+@media (max-width: 640px) {
+  /* Enable smooth native scrolling on iOS */
+  html, body {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Thin, rounded scrollbar for WebKit browsers (mobile) */
+  ::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.12);
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* Firefox: thin scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.12) transparent;
+  }
+
+  /* Make the team buttons (chips) larger and easier to tap on mobile */
+  .team-chip {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    min-width: 3.25rem;
+    font-size: 0.95rem;
+    border-radius: 0.5rem;
+    flex: 0 0 auto;
+  }
+
+  /* Slightly increase gaps between chips for touch comfort */
+  .team-chips-row {
+    gap: 0.65rem;
+    /* Disable wrapping on mobile and make the row horizontally scrollable */
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.45rem; /* space for scrollbar and better hit area */
+    scrollbar-gutter: stable;
+  }
+}

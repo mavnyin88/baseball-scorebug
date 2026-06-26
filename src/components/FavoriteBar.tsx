@@ -40,7 +40,7 @@ function TeamChip({ name, abbr, onPick }: { name: string; abbr: string; onPick: 
       onClick={() => onPick(name)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="relative w-12 py-1.5 rounded text-xs font-bold font-mono tracking-wider transition-all duration-150 cursor-pointer text-center"
+      className="team-chip relative w-12 py-1.5 rounded text-xs font-bold font-mono tracking-wider transition-all duration-150 cursor-pointer text-center"
       style={{
         backgroundColor: hovered ? `${RED}22` : "rgba(255,255,255,0.08)",
         color: hovered ? "#fff" : "#a1a1aa",
@@ -103,7 +103,7 @@ export function FavoriteBar() {
       <div className="flex items-center gap-1 mb-3">
         <p className="text-sm font-bold tracking-wide text-white">Star your favorite team</p>
       </div>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 team-chips-row">
         {ALL_TEAMS.map((t) => (
           <TeamChip key={t.name} name={t.name} abbr={t.abbr} onPick={pick} />
         ))}
