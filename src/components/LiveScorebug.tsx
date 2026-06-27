@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { LinescoreResponse } from "@/lib/mlb/types";
+import { RunFlowChart } from "./RunFlowChart";
 
 interface Props {
   gamePk: number;
@@ -95,44 +96,50 @@ export function LiveScorebug({
         )}
       </header>
 
-      <div className="grid grid-cols-[2fr_1fr_1fr] gap-4 rounded-lg bg-surface p-5 border border-white/10 max-w-[23rem]">
-        {/* Scores */}
-        <div className="flex flex-col justify-center gap-3">
-          <ScoreRow abbr={awayAbbr} runs={away?.runs} />
-          <ScoreRow abbr={homeAbbr} runs={home?.runs} />
+      <div className="grid items-stretch gap-4 md:grid-cols-2">
+        {/* Scorebug */}
+        <div className="grid grid-cols-[2fr_1fr_1fr] gap-4 rounded-lg bg-surface p-5 border border-white/10">
+          {/* Scores */}
+          <div className="flex flex-col justify-center gap-3">
+            <ScoreRow abbr={awayAbbr} runs={away?.runs} />
+            <ScoreRow abbr={homeAbbr} runs={home?.runs} />
+          </div>
+
+          {/* Bases + count */}
+          <div className="flex flex-col items-center justify-center gap-2">
+            <BasesDiamond
+              first={!!data.offense?.first?.id}
+              second={!!data.offense?.second?.id}
+              third={!!data.offense?.third?.id}
+            />
+            <p className="text-md">
+              <span>{data.balls ?? 0}</span>
+              <span className="mx-1 text-zinc-500">-</span>
+              <span>{data.strikes ?? 0}</span>
+            </p>
+          </div>
+
+          {/* Inning + outs */}
+          <div className="flex flex-col items-end justify-around">
+            <div className="flex items-center gap-1.5">
+              <InningArrow state={inningState} />
+              <p className="text-md">{data.currentInningOrdinal ?? "—"}</p>
+            </div>
+            <div className="flex gap-1.5">
+              {[0, 1].map((i) => (
+                <span
+                  key={i}
+                  className={`size-4 rounded-full border-2 border-white ${
+                    (data.outs ?? 0) > i ? "bg-white" : "bg-transparent"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Bases + count */}
-        <div className="flex flex-col items-center justify-center gap-2">
-          <BasesDiamond
-            first={!!data.offense?.first?.id}
-            second={!!data.offense?.second?.id}
-            third={!!data.offense?.third?.id}
-          />
-          <p className="text-md">
-            <span>{data.balls ?? 0}</span>
-            <span className="mx-1 text-zinc-500">-</span>
-            <span>{data.strikes ?? 0}</span>
-          </p>
-        </div>
-
-        {/* Inning + outs */}
-        <div className="flex flex-col items-end justify-around">
-          <div className="flex items-center gap-1.5">
-            <InningArrow state={inningState} />
-            <p className="text-md">{data.currentInningOrdinal ?? "—"}</p>
-          </div>
-          <div className="flex gap-1.5">
-            {[0, 1].map((i) => (
-              <span
-                key={i}
-                className={`size-4 rounded-full border-2 border-white ${
-                  (data.outs ?? 0) > i ? "bg-white" : "bg-transparent"
-                }`}
-              />
-            ))}
-          </div>
-        </div>
+        {/* Run-flow data viz */}
+        <RunFlowChart linescore={data} homeAbbr={homeAbbr} awayAbbr={awayAbbr} />
       </div>
 
     </div>
