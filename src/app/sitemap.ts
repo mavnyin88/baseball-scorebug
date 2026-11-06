@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getSchedule } from "@/lib/mlb/schedule";
 import { todayET } from "@/lib/http";
+import { season } from "@/config/season";
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.baseballscorebug.com";
 
@@ -15,11 +16,14 @@ const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.baseballscorebug.c
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const date = todayET();
   let games: number[] = [];
-  try {
-    const sched = await getSchedule(date);
-    games = sched.dates.flatMap((d) => d.games.map((g) => g.gamePk));
-  } catch {
-    // If the schedule fetch fails, still return the home page entry.
+  // Off-season: no games to list, so skip the MLB fetch entirely.
+  if (!season.offseason) {
+    try {
+      const sched = await getSchedule(date);
+      games = sched.dates.flatMap((d) => d.games.map((g) => g.gamePk));
+    } catch {
+      // If the schedule fetch fails, still return the home page entry.
+    }
   }
 
   const now = new Date();

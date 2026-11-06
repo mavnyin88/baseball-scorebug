@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getSchedule } from "@/lib/mlb/schedule";
 import { todayET } from "@/lib/http";
+import { season } from "@/config/season";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -34,6 +35,13 @@ export async function GET(req: NextRequest) {
   }
 
   const date = todayET();
+
+  // Off-season safety net: even if the cron-job.org job is still running,
+  // don't touch Redis or the MLB API. Pause the external job too.
+  if (season.offseason) {
+    return NextResponse.json({ date, skipped: "offseason" });
+  }
+
   const sched = await getSchedule(date);
 
   // Reported for observability only; no fan-out happens here today.
