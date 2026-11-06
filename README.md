@@ -44,6 +44,37 @@ Then open http://localhost:3000.
    - **Headers:** `Authorization: Bearer <same CRON_SECRET>`
 3. Confirm execution log shows `200` and the response body reports `liveGames` / `refreshed`.
 
+## Off-season toggle
+
+After the World Series, flip the site into off-season mode: the homepage shows a champion banner above an empty "Today's games" section, and **nothing calls the MLB Stats API** (no Redis reads either).
+
+The flag is the `OFFSEASON_MODE` env var (server-only). Banner content — champion name, year, message — lives in [`src/config/season.ts`](src/config/season.ts).
+
+| Surface | `OFFSEASON_MODE=true` |
+|---|---|
+| `/` (homepage) | Banner + "No games on the schedule today."; `getSchedule()` is never called |
+| `/api/internal/warm` | Returns `{ date, skipped: "offseason" }` without fetching |
+| `/sitemap.xml` | Home page entry only |
+| `/api/schedule` | Empty schedule `{ totalGames: 0, dates: [] }` |
+| `/game/[gamePk]` | Unchanged — old links still work on demand (low traffic, cached) |
+
+### Turning it on (after the World Series)
+
+1. Update `champion` / `message` in `src/config/season.ts` if needed, and merge.
+2. Vercel → Project → Settings → Environment Variables: set `OFFSEASON_MODE=true` (Production).
+3. Redeploy — env var changes only apply to new deployments.
+4. cron-job.org: **pause** (don't delete) the `/api/internal/warm` job. The warmer short-circuits anyway, so forgetting this step is harmless — it just wastes function invocations.
+5. Check: `/` shows the banner; `/api/internal/warm` (with the bearer header) returns `skipped: "offseason"`.
+
+### Turning it off (spring)
+
+1. Vercel: delete `OFFSEASON_MODE` or set it to `false`.
+2. Redeploy.
+3. cron-job.org: **resume** the warmer job.
+4. Check: `/` lists today's games; the cron-job.org log shows `200` with `scheduleRefreshed: true`.
+
+Locally, add `OFFSEASON_MODE=true` to `.env.local` and restart `pnpm dev`.
+
 ## Layout
 
 ```
